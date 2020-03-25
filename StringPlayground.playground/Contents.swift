@@ -811,13 +811,13 @@ positiveInfix // positiveInfix == "7429"
 "🇺🇸\n".utf8.count
 "🇺🇸\r\n".count
 "🇺🇸\r\n".utf8.count
-// \r\n is treated as 1 unicode char but as utf8 treats it as 2 chars
+// \r\n is treated as 1 unicode char but as utf8 treats it as 2 characters
 "\n".count
 "\n".size
 "\r".count
 "\r".size
-"\r\n".count // pure ascii string but count treats it as Unicode so it's 1 char
-"\r\n".size // pure ascii string so size will treat it as utf8 so it's 2 chars
+"\r\n".count // pure ascii string but count treats it as Unicode so it's 1 character
+"\r\n".size // pure ascii string so size will treat it as utf8 so it's 2 characters
 "\r\n".utf8.count // same as size above
 
 "\n\r".count
