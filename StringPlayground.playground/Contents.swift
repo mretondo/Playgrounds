@@ -24,38 +24,38 @@ public extension StringProtocol {
 
     // [i]
     subscript(i: Int) -> Character {
-        return self[self.index(at: i)]
+        return self[index(at: i)]
     }
 
     // [i..<j]
-    subscript(range: Range<Int>) -> Self.SubSequence {
-        let i = self.index(at: range.lowerBound)
-        let j = self.index(at: range.upperBound)
+    subscript(range: Range<Int>) -> SubSequence {
+        let i = index(at: range.lowerBound)
+        let j = index(at: range.upperBound)
         return self[i..<j]
     }
 
     // [i...j]
-    subscript(range: ClosedRange<Int>) -> Self.SubSequence {
-        let i = self.index(at: range.lowerBound)
-        let j = self.index(at: range.upperBound)
+    subscript(range: ClosedRange<Int>) -> SubSequence {
+        let i = index(at: range.lowerBound)
+        let j = index(at: range.upperBound)
         return self[i...j]
     }
 
     // [..<i]
-    subscript(range: PartialRangeUpTo<Int>) -> Self.SubSequence {
-        let i = self.index(at: range.upperBound)
+    subscript(range: PartialRangeUpTo<Int>) -> SubSequence {
+        let i = index(at: range.upperBound)
         return self[..<i]
     }
 
     // [...i]
-    subscript(range: PartialRangeThrough<Int>) -> Self.SubSequence {
-        let i = self.index(at: range.upperBound)
+    subscript(range: PartialRangeThrough<Int>) -> SubSequence {
+        let i = index(at: range.upperBound)
         return self[...i]
     }
 
     // [i...]
-    subscript(range: PartialRangeFrom<Int>) -> Self.SubSequence {
-        let i = self.index(at: range.lowerBound)
+    subscript(range: PartialRangeFrom<Int>) -> SubSequence {
+        let i = index(at: range.lowerBound)
         return self[i...]
     }
 }
@@ -70,7 +70,7 @@ public extension String {
     var size: Int {
         // utf8 will treat \r\n as 2 character so "\r\n".utf8.count returns 2
         // Unicode treats \r\n as 1 character so "\r\n".count returns 1
-        get {self.utf8.count}
+        get {utf8.count}
     }
 }
 
@@ -81,10 +81,10 @@ public extension StringProtocol {
     /// - Parameters:
     ///   - string: The string to search for.
     /// - Returns: An array of String.Index.
-    func indices(of string: String) -> [Self.Index] {
-        var indices = [Self.Index]()
+    func indices(of string: String) -> [Index] {
+        var indices = [Index]()
         var start = self.startIndex
-        while start < self.endIndex, let range = self.range(of: string, range: start..<self.endIndex), !range.isEmpty {
+        while start < self.endIndex, let range = range(of: string, range: start..<self.endIndex), !range.isEmpty {
             //            let IndexDistance: String.IndexDistance = distance(from: self.startIndex, to: range.lowerBound)
             indices.append(range.lowerBound)
             start = range.upperBound
@@ -104,24 +104,24 @@ public extension StringProtocol {
     ///   as the result of `n` calls to `index(after:)`.
     ///   If `n` is negative, this is the same value as the result of `-n` calls
     ///   to `index(before:)`.
-    func index(at n: String.IndexDistance) -> Self.Index {
+    func index(at n: String.IndexDistance) -> Index {
         if n == 0 {
             return self.startIndex
         } else if n >= 0 {
-            return self.index(self.startIndex, offsetBy: n)
+            return index(self.startIndex, offsetBy: n)
         } else {
-            return self.index(self.endIndex, offsetBy: n)
+            return index(self.endIndex, offsetBy: n)
         }
     }
 
     @inline(__always)
-    func indexRangeFor(range: Range<Int>) -> Range<Self.Index> {
-        return self.index(at: range.lowerBound)..<self.index(at: range.upperBound)
+    func indexRangeFor(range: Range<Int>) -> Range<Index> {
+        return index(at: range.lowerBound)..<index(at: range.upperBound)
     }
 
     @inline(__always)
-    func indexRangeFor(range: ClosedRange<Int>) -> ClosedRange<Self.Index> {
-        return self.index(at: range.lowerBound)...self.index(at: range.upperBound)
+    func indexRangeFor(range: ClosedRange<Int>) -> ClosedRange<Index> {
+        return index(at: range.lowerBound)...index(at: range.upperBound)
     }
 }
 
@@ -131,13 +131,13 @@ public extension StringProtocol {
     ///
     /// - Parameters:
     ///   - range: A half-open interval from a lower bound up to, but not including, an upper bound.
-    func substring(with range: Range<Int>) -> Self.SubSequence? {
-        let r = 0...self.count
+    func substring(with range: Range<Int>) -> SubSequence? {
+        let r = 0...count
 
         guard r.contains(range.lowerBound) && r.contains(range.upperBound) else { return nil }
 
-        let start = self.index(at: range.lowerBound)
-        let end = self.index(at: range.upperBound)
+        let start = index(at: range.lowerBound)
+        let end = index(at: range.upperBound)
 
         return self[start..<end]
     }
@@ -146,33 +146,33 @@ public extension StringProtocol {
     ///
     /// - Parameters:
     ///   - range: A ClosedRange interval from a lower bound up to, but not including, an upper bound.
-    func substring(with range: ClosedRange<Int>) -> Self.SubSequence? {
-        let r = 0..<self.count
+    func substring(with range: ClosedRange<Int>) -> SubSequence? {
+        let r = 0..<count
 
         guard r.contains(range.lowerBound) && r.contains(range.upperBound) else { return nil }
 
-        let start = self.index(at: range.lowerBound)
-        let end = self.index(at: range.upperBound)
+        let start = index(at: range.lowerBound)
+        let end = index(at: range.upperBound)
 
         return self[start...end]
     }
 
     /// 'i' can be negitive to go in reverse direction
-    func substring(from i: Int) -> Self.SubSequence? {
-        guard abs(i) < self.count else { return nil }
+    func substring(from i: Int) -> SubSequence? {
+        guard abs(i) < count else { return nil }
 
-        let fromIndex = i >= 0 ? self.index(at: i) : self.index(self.endIndex, offsetBy: i)
+        let fromIndex = i >= 0 ? index(at: i) : index(self.endIndex, offsetBy: i)
         let toIndex   = i >= 0 ? self.endIndex : self.startIndex
 
         return i >= 0 ? self[fromIndex..<toIndex] : self[toIndex..<fromIndex]
     }
 
     /// 'i' can be negitive to go in reverse direction
-    func substring(to i: Int) -> Self.SubSequence? {
-        guard abs(i) <= self.count else { return nil }
+    func substring(to i: Int) -> SubSequence? {
+        guard abs(i) <= count else { return nil }
 
         let fromIndex = i >= 0 ? self.startIndex : self.endIndex
-        let toIndex   = i >= 0 ? self.index(at: i) : self.index(self.endIndex, offsetBy: i)
+        let toIndex   = i >= 0 ? index(at: i) : index(self.endIndex, offsetBy: i)
 
         return i >= 0 ? self[fromIndex..<toIndex] : self[toIndex..<fromIndex]
     }
@@ -214,7 +214,7 @@ public extension StringProtocol {
     ///     is set so the remaining elements of the collection will be returned.
     /// - Returns: A subsequence starting from `position` up to `maxLength`
     ///   elements in the collection.
-    func infix(from position: Int, maxLength: Int = Int.max) -> Self.SubSequence {
+    func infix(from position: Int, maxLength: Int = Int.max) -> SubSequence {
         // if 'position' is beyond the last charecter position then set 'start' to 'endIndex'
         let start = index(startIndex, offsetBy: numericCast(position), limitedBy: endIndex) ?? endIndex
 
@@ -236,7 +236,7 @@ public extension StringProtocol {
     ///   returns `false` it will not be called again.
     ///
     /// - Complexity: O(*n*), where *n* is the length of the collection.
-    func infix(from position: Int, while predicate: (Element) throws -> Bool) rethrows -> Self.SubSequence {
+    func infix(from position: Int, while predicate: (Element) throws -> Bool) rethrows -> SubSequence {
         // if 'position' is beyond the last charecter position then set 'start' to 'endIndex'
         let start = index(startIndex, offsetBy: numericCast(position), limitedBy: endIndex) ?? endIndex
 
@@ -249,12 +249,12 @@ public extension StringProtocol {
     }
 
     @inline(__always)
-    func infix(from start: String.Index, upTo end: String.Index) -> Self.SubSequence {
+    func infix(from start: String.Index, upTo end: String.Index) -> SubSequence {
         return self[start..<end]
     }
 
     @inline(__always)
-    func infix(from start: String.Index, through end: String.Index) -> Self.SubSequence {
+    func infix(from start: String.Index, through end: String.Index) -> SubSequence {
         return self[start...end]
     }
 }
@@ -398,7 +398,7 @@ public extension String {
     /// Returns a new string by replacing matches of pattern with replacement.
     func replacedMatches(of pattern: String, with replacement: String) -> String {
         let regex = try! NSRegularExpression(pattern: pattern)
-        let range = NSMakeRange(0, self.utf16.count)
+        let range = NSMakeRange(0, utf16.count)
 
         return regex.stringByReplacingMatches(in: self, options: [], range: range, withTemplate: replacement)
     }
@@ -406,7 +406,7 @@ public extension String {
     /// Returns a new string in which all occurrences of a target string
     /// in a specified range of the string are removed.
     func removedOccurrences(of occurrence: String, options: String.CompareOptions = []) -> String {
-        return self.replacingOccurrences(of: occurrence, with: "", options: options)
+        return replacingOccurrences(of: occurrence, with: "", options: options)
     }
 }
 
@@ -414,7 +414,7 @@ public extension String {
 
     /// Returns a new string made by removing all whitespacesAndNewlines.
     func trimmingWhitepaceAndNewlines() -> String {
-        return self.trimmingCharacters(in: .whitespacesAndNewlines)
+        return trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
     func trimmingLeadingWhitepaceAndNewlines() -> String {
@@ -490,18 +490,18 @@ public extension String {
         }
 
         var end = pin
-        while end < self.count && self[end] == " " {
+        while end < count && self[end] == " " {
             end += 1
         }
 
         var newString = self
         if start == end {//No space
-            newString.replaceSubrange(self.index(at: start)..<self.index(at: start), with: " ")
+            newString.replaceSubrange(index(at: start)..<index(at: start), with: " ")
         } else if end - start == 1 {//If one space
-            let range = self.index(at: start)..<self.index(at: end)
+            let range = index(at: start)..<index(at: end)
             newString.replaceSubrange(range, with: " ")
         } else { //More than one space
-            let range = self.index(at: start)..<self.index(at: end)
+            let range = index(at: start)..<index(at: end)
             newString.replaceSubrange(range, with: " ")
         }
         return (start, newString)
@@ -509,14 +509,14 @@ public extension String {
 
     func selectWord(pin: Int) -> Range<String.Index>? {
         guard let range:Range<Int> = selectWord(pin: pin) else { return nil }
-        return self.indexRangeFor(range: range)
+        return indexRangeFor(range: range)
     }
 
     func selectWord(pin: Int) -> Range<Int>? {
         var pin = pin
 
-        guard pin <= self.count else { return nil }
-        guard self.count > 1  else { return nil }
+        guard pin <= count else { return nil }
+        guard count > 1  else { return nil }
 
         // Move pin to one position left when it is after last character
         let invalidLastChars = CharacterSet(charactersIn: " :!?,.")
@@ -736,7 +736,7 @@ if let i = cafe.index(of: "é") {
 "a".prefix(2)
 //"a".prefix(-1) // thoughs exception
 
-"a".infix(from: 1)
+//"a".infix(from: 1)
 "a".infix(from: 0, maxLength: 2)
 
 "a".suffix(0)
@@ -806,19 +806,36 @@ positiveInfix = numbers.infix(from: 1) { $0 != "6" }  // with while - predicate 
 positiveInfix // positiveInfix == "7429"
 
 "🇺🇸".count
-"🇺🇸".utf8.count
 "🇺🇸\n".count
+"🇺🇸\r".count
+"🇺🇸\r\n".count    // \r\n is treatead as 1 glyph in standard UNICODE
+
+"🇺🇸".size
+"🇺🇸\n".size
+"🇺🇸\r".size
+"🇺🇸\r\n".size    // \r\n is treatead as 2 characters in 'size'
+
+// note these are the same as 'size'
+"🇺🇸".utf8.count
 "🇺🇸\n".utf8.count
-"🇺🇸\r\n".count
-"🇺🇸\r\n".utf8.count
-// \r\n is treated as 1 unicode char but as utf8 treats it as 2 characters
+"🇺🇸\r".utf8.count
+"🇺🇸\r\n".utf8.count    // \r\n is treatead as 2 characters in UTF8
+
+"🇺🇸\r\n".lengthOfBytes(using: .utf8)  // utf8 treats \r\n as 2 characters
+"🇺🇸\r\n".lengthOfBytes(using: .utf16) // utf16 treats \r\n as 2 characters
+"🇺🇸\r\n".lengthOfBytes(using: .unicode)
+"🇺🇸\r\n".lengthOfBytes(using: .ascii)  // ascii requires all characters to be ascii else 0 is returned
+
+// \r\n as a pair is treated as 1 standard UNICODE character but as utf8 it's treated as 2 seperate characters.
+// There the only ascii characters to be treated differently in standard UNICODE vs. UTF8.
 "\n".count
 "\n".size
 "\r".count
 "\r".size
-"\r\n".count // pure ascii string but count treats it as Unicode so it's 1 character
-"\r\n".size // pure ascii string so size will treat it as utf8 so it's 2 characters
-"\r\n".utf8.count // same as size above
+"\r\n".count // count treats string as Unicode and NOT UTF8 i.e. NOT pure ascii so it's 1 character
+"\r\n".size // size treats string as utf8 which treats ALL ascii characters as 1 character
+"\r\n".utf8.count // same as 'size'
+"\r\n".lengthOfBytes(using: .ascii)
 
 "\n\r".count
 "\n\r".size
@@ -828,6 +845,6 @@ positiveInfix // positiveInfix == "7429"
 numbers = "12\n34\n"
 numbers.count
 numbers.size
-numbers.length  // length uses utf16 which uses 2 byte code points
-
+numbers.length  // length in utf16 code points which uses 2 bytes for each code point
+numbers.lengthOfBytes(using: .utf16)    // basically the same as (numbers.length * 2)
 
