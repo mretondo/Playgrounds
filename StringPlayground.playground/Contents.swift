@@ -60,20 +60,6 @@ public extension StringProtocol {
     }
 }
 
-public extension String {
-
-    /// ONLY USE WITH PURE ASCII STRINGS!!!
-    ///
-    /// Returns the number of bytes used to hold the string. This works because
-    /// Swift 5 now uses UTF-8 as it's backing store.
-    @inline(__always)
-    var size: Int {
-        // utf8 will treat \r\n as 2 character so "\r\n".utf8.count returns 2
-        // Unicode treats \r\n as 1 character so "\r\n".count returns 1
-        get {utf8.count}
-    }
-}
-
 public extension StringProtocol {
 
     /// Returns an array of indices where 'string' is located with in the string.
@@ -180,7 +166,7 @@ public extension StringProtocol {
 
 public extension StringProtocol {
     //
-    // infixs to complement prefix and suffix
+    // infix is to complement prefix and suffix
     //
 
     /// Companion function to String.prefix() and String.suffix(). It is similar to
@@ -380,6 +366,18 @@ extension StringProtocol {
 
 public extension String {
 
+    /// Returns the number of bytes used to hold the string. This works because
+    /// Swift 5 now uses UTF-8 as it's backing store.
+    @inline(__always)
+    var size: Int {
+        // utf8 will treat \r\n as 2 character so "\r\n".utf8.count returns 2
+        // Unicode treats \r\n as 1 character so "\r\n".count returns 1
+        get {utf8.count}
+    }
+}
+
+public extension String {
+
     /// returns a Strings length as a NSString length
     @inline(__always)
     var length: Int {
@@ -417,6 +415,7 @@ public extension String {
         return trimmingCharacters(in: .whitespacesAndNewlines)
     }
 
+    /// Returns a new string made by removing all leading whitespacesAndNewlines.
     func trimmingLeadingWhitepaceAndNewlines() -> String {
         let newString = self
 
@@ -426,6 +425,7 @@ public extension String {
         return newString
     }
 
+    /// Returns a new string made by removing all trailing whitespacesAndNewlines.
     func trimmingTrailingWhitepaceAndNewlines() -> String {
         let newString = self
 
