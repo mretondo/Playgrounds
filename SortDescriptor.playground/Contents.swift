@@ -130,18 +130,18 @@ let people = [
     Person(first: "Ava",    last: "Barnes", yearOfBirth: 1998),
 ]
 
+//
+// use SortDescriptor.swift from MRUtils to do multi-level sorting
+//
 let sortByYear: SortDescriptor<Person> = sortDescriptor(key: { $0.yearOfBirth })
+let sortByYearDesending: SortDescriptor<Person> = sortDescriptor(key: { $0.yearOfBirth }, by: >)
 let sortByFirstName: SortDescriptor<Person> = sortDescriptor(key: { $0.first }, by: String.localizedStandardCompare)
 let sortByLastName: SortDescriptor<Person> = sortDescriptor(key: { $0.last }, by: String.localizedStandardCompare)
 
-var combinedSortDescriptors: SortDescriptor<Person> = combineSortDescriptors(using: [sortByLastName, sortByFirstName, sortByYear] )
-let orderedPeople = people.sorted(by: combinedSortDescriptors).description
-
-// sort desending by year
-let sortByYearGreaterThan: SortDescriptor<Person> = sortDescriptor(key: { $0.yearOfBirth }, by: >)
-combinedSortDescriptors = combineSortDescriptors(using: [sortByLastName, sortByFirstName, sortByYearGreaterThan] )
-people.sorted(by: combinedSortDescriptors).description
-
+var combinedSortDescriptors = combineSortDescriptors (using: [sortByLastName, sortByFirstName, sortByYear])
+var asendingPeople = people.sorted(by: combinedSortDescriptors)
+combinedSortDescriptors = combineSortDescriptors (using: [sortByLastName, sortByFirstName, sortByYearDesending])
+var desendingPeople = people.sorted(by: combinedSortDescriptors)
 
 //
 // Sort Finder filenames only by their extensions
@@ -156,31 +156,49 @@ extension String {
     }
 }
 
-var files = ["file.swift", "one", "two", "test.h", "three", "file.h", "file.", "file.c"]
-let compare = lift(String.localizedStandardCompare)
-let result = files.sorted(by: sortDescriptor(key: { $0.fileExtension }, by: compare))
-result // ["one", "two", "three", "file.", "file.c", "test.h", "file.h", "file.swift"]
+//var files = ["file.swift", "one", "two", "test.h", "three", "file.h", "file.", "file.c"]
+var files = ["b", "a.", "a", "b.", "a.x", "b.h"]
 
-// sort 'files' in place
-files.sort { e0, e1 in
-    // don't swap items if both don't have extensions
-    if e1.fileExtension == nil && e0.fileExtension == nil {
-        return false
+//
+// file names sorted like Finder
+//
+let fileNamesAsending = files.sorted(by: sortDescriptor(key: { $0 }, by: String.localizedStandardCompare))
+fileNamesAsending  // ["a", "a.", "a.x", "b", "b.", "b.h"]
+
+let fileNamesDesending = files.sorted(by: sortDescriptor(key: { $0 },
+                                                         ascending: false,
+                                                         by: String.localizedStandardCompare))
+fileNamesDesending // ["b.h", "b.", "b", "a.x", "a.", "a"]
+
+
+//
+// file extensions sorted like Finder
+//
+// lift allows String.localizedStandardCompare to take optionals
+//
+let extensionsAsending = files.sorted(by: sortDescriptor(key: { $0.fileExtension },
+                                                         by: lift(String.localizedStandardCompare)))
+extensionsAsending   // ["b", "a", "a.", "b.", "b.h", "a.x"]
+
+let extensionsDesending = files.sorted(by: sortDescriptor(key: { $0.fileExtension },
+                                                          ascending: false,
+                                                          by: lift(String.localizedStandardCompare)))
+extensionsDesending // ["a.x", "b.h", "a.", "b.", "b", "a"]
+
+
+//
+// file extensions sorted descending like Finder NOT using SortDescriptor
+//
+var fileExtensionsDescending: [String] {
+    return files.sorted { lhs, rhs in
+        switch (lhs.fileExtension, rhs.fileExtension) {
+            case (nil, nil): return false   // don't swap
+            case (nil, _): return false     // descending so nil comes second
+            case (_, nil): return true      // descending so nil comes second
+            case (_, _): return lhs.fileExtension!.localizedStandardCompare(rhs.fileExtension!) == .orderedDescending
+        }
     }
-
-    // if file on the right has no extension it comes first
-    if e0.fileExtension == nil {
-        return true
-    }
-
-    // if file on the left has no extension it comes first
-    if e1.fileExtension == nil {
-        return false
-    }
-
-    return e1.fileExtension.flatMap { e0.fileExtension?.localizedStandardCompare($0) } == .orderedDescending
 }
-files // ["one", "two", "three", "file.swift", "test.h", "file.h", "file.c", "file."]
-
+fileExtensionsDescending // ["a.x", "b.h", "a.", "b.", "b", "a"]
 
 
