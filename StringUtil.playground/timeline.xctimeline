@@ -3,12 +3,17 @@
    version = "3.0">
    <TimelineItems>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/mike/Documents/Development/Playgrounds/StringUtil.playground#CharacterRangeLen=30796&amp;CharacterRangeLoc=0&amp;EndingColumnNumber=16&amp;EndingLineNumber=848&amp;StartingColumnNumber=0&amp;StartingLineNumber=0&amp;Timestamp=631148163.160876"
+         documentLocation = "file:///Users/mike/Documents/Development/Playgrounds/StringUtil.playground#CharacterRangeLen=31082&amp;CharacterRangeLoc=0&amp;EndingColumnNumber=16&amp;EndingLineNumber=861&amp;StartingColumnNumber=0&amp;StartingLineNumber=0&amp;Timestamp=664506188.657676"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>
       <LoggerValueHistoryTimelineItem
-         documentLocation = "file:///Users/mike/Documents/Development/Playgrounds/StringUtil.playground#CharacterRangeLen=30796&amp;CharacterRangeLoc=0&amp;EndingColumnNumber=16&amp;EndingLineNumber=848&amp;StartingColumnNumber=0&amp;StartingLineNumber=0&amp;Timestamp=631148163.16105"
+         documentLocation = "file:///Users/mike/Documents/Development/Playgrounds/StringUtil.playground#CharacterRangeLen=31082&amp;CharacterRangeLoc=0&amp;EndingColumnNumber=16&amp;EndingLineNumber=861&amp;StartingColumnNumber=0&amp;StartingLineNumber=0&amp;Timestamp=664506188.657807"
+         selectedRepresentationIndex = "0"
+         shouldTrackSuperviewWidth = "NO">
+      </LoggerValueHistoryTimelineItem>
+      <LoggerValueHistoryTimelineItem
+         documentLocation = "file:///Users/mike/Documents/Development/Playgrounds/StringUtil.playground#CharacterRangeLen=19&amp;CharacterRangeLoc=24773&amp;EndingColumnNumber=0&amp;EndingLineNumber=647&amp;StartingColumnNumber=5&amp;StartingLineNumber=646&amp;Timestamp=664506188.657921"
          selectedRepresentationIndex = "0"
          shouldTrackSuperviewWidth = "NO">
       </LoggerValueHistoryTimelineItem>

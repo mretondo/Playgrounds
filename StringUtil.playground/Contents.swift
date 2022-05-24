@@ -388,6 +388,18 @@ public extension String {
 
 public extension String {
 
+    /// returns true if string contains any non ascii characters else false
+    @inline(__always)
+    var isAscii: Bool {
+        get {
+            return self == "" || lengthOfBytes(using: .ascii) != 0
+        }
+    }
+}
+
+
+public extension String {
+
     /// Returns a new string with repeating current string 'count' times
     func repeated(count: Int) -> String {
         return [String].init(repeating: self, count: count).joined()
@@ -836,6 +848,7 @@ positiveInfix // positiveInfix == "7429"
 "\r\n".size // size treats string as utf8 which treats ALL ascii characters as 1 character
 "\r\n".utf8.count // same as 'size'
 "\r\n".lengthOfBytes(using: .ascii)
+"\r\n".lengthOfBytes(using: .utf16)
 
 "\n\r".count
 "\n\r".size
@@ -847,3 +860,9 @@ numbers.count
 numbers.size
 numbers.length  // length in utf16 code points which uses 2 bytes for each code point
 numbers.lengthOfBytes(using: .utf16)    // basically the same as (numbers.length * 2)
+
+"🇺🇸".isAscii
+"🇺🇸abc".isAscii
+"abc".isAscii
+"".isAscii
+

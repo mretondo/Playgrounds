@@ -67,7 +67,7 @@ extension Sequence {
 //
 print()
 let w = "Backwards"
-print("'Backwards' shuffled: \(w.shuffled())")
+print("'Backwards' shuffled: \(w.shuffled())") //  calls Sequence extension shuffled
 // Prints ["s", "d", "r", "a", "w", "c", "a", "k", "B"]
 
 //
@@ -75,10 +75,12 @@ print("'Backwards' shuffled: \(w.shuffled())")
 //
 print()
 var strHello = "Hello"
-var shuffledString = String(strHello.shuffled())
+var charArray = Array(strHello)
+charArray.shuffled() // [Character]
+var shuffledString = String(charArray)
 print(shuffledString)
-//print(String("Hello".shuffled())) // one liner
-// prints “leHol” or similar
+print(String("Hello".shuffled())) // one liner calls Sequence extension shuffled
+//print ("leHol or similar")
 
 //
 // use Array.shuffle()
