@@ -6,11 +6,13 @@ let a = 0...10
 for i in a.reversed() {
     print(i)
 }
+print ("reverse range")
 
 let reversedCollection = (0 ..< 6).reversed()
 for i in reversedCollection {
     print(i)
 }
+print ("reversedCollection")
 
 //
 // reverse array using stride
@@ -21,6 +23,12 @@ for i in stride(from: intArray.count-1, to: -1, by: -1){
     reverseArr.append(intArray[i])
 }
 print ("Use stride: \(reverseArr)")
+
+var Arr = [Int]()
+for i in stride(from: 0, to: intArray.count, by: 1){
+    Arr.append(intArray[i])
+}
+print ("Use stride: \(Arr)")
 
 // reverse with iterator
 extension Int {
@@ -43,6 +51,8 @@ for index in iterator {
 //
 // reverse string
 //
+print("")
+
 let word = "Backwards"
 for char in word.reversed() {
     print(char, terminator: "") // terminator prevents newline i.e. sdrawkcaB
@@ -76,10 +86,10 @@ print("'Backwards' shuffled: \(w.shuffled())") //  calls Sequence extension shuf
 print()
 var strHello = "Hello"
 var charArray = Array(strHello)
-charArray.shuffled() // [Character]
+charArray = charArray.shuffled() // [Character]
 var shuffledString = String(charArray)
 print(shuffledString)
-print(String("Hello".shuffled())) // one liner calls Sequence extension shuffled
+//print(String("Hello".shuffled())) // one liner calls Sequence extension shuffled
 //print ("leHol or similar")
 
 //
@@ -91,24 +101,21 @@ let strApple = "Apple"
 var strArray = Array(strApple)
 strArray.shuffle()
 let shuffledStr = String(strArray)
-print(shuffledStr)
-// shuffledWord = “pAelp” or similar
+print(shuffledStr) // “pAelp”
 
 //
 // Sort arrary then reverse it
 //
 print()
 let nums = [100, 5, 53, 98, 29]
-let srt = Array(nums.sorted())
-let reversed1 = Array(srt.reversed())
-print(reversed1)
-// prints [5, 29, 53, 98, 100]
+let srt = nums.sorted()
+let reversed1 = Array(srt.reversed()) // [5, 29, 53, 98, 100]
 
 //
 // Reverse [String]
 //
 print()
-let names: [String] = ["Apple", "Microsoft", "Sony", "Lenovo", "Asus"]
+let names = ["Apple", "Microsoft", "Sony", "Lenovo", "Asus"]
 var reversedNames = [String]()
 for arrayIndex in stride(from: names.count - 1, through: 0, by: -1) {
     reversedNames.append(names[arrayIndex])
@@ -119,24 +126,28 @@ print(reversedNames)
 // reverse array in place
 //
 print()
-var names1:[String] = [ "A", "B", "C", "D", "E","F","G"]
+//var numArrary = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+var names1 = [ "A", "B", "C", "D", "E","F","G"]
 var count = names1.count - 1
 var idx = 0
 while idx < count {
     names1.swapAt(idx, count)
-    idx = idx + 1
-    count = count - 1
+    idx += 1
+    count -= 1
 }
 print("Reversed in place: \(names1)")
 
-print()
-var numArrary:[Int] = [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-var cnt = numArrary.count - 1
-var i = 0
-while i < cnt {
-    numArrary.swapAt(i, cnt)
-    i += 1
-    cnt -= 1
+print ("")
+func revInPlace(nums: inout [Int])
+{
+    var count = nums.count - 1
+    var idx = 0
+    while idx < count {
+        nums.swapAt(idx, count)
+        idx += 1
+        count -= 1
+    }
 }
-print("Reversed in place: \(numArrary)")
-
+var nums1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
+revInPlace(nums: &nums1)
+print (nums1)

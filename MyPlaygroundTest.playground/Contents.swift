@@ -2,7 +2,6 @@ import Cocoa
 import Swift
 
 var str = "Hello, playground"
-var subStr = str[str.index(after: str.startIndex)..<str.index(before: str.endIndex)]
 var students = ["Ben", "Ivy", "Jordell", "Maxime"]
 if let i = students.firstIndex(of: "Ben") {
     print (i)

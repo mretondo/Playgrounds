@@ -62,22 +62,6 @@ public extension StringProtocol {
 
 public extension StringProtocol {
 
-    /// Returns an array of indices where 'string' is located with in the string.
-    ///
-    /// - Parameters:
-    ///   - string: The string to search for.
-    /// - Returns: An array of String.Index.
-    func indices(of string: String) -> [Index] {
-        var indices = [Index]()
-        var start = self.startIndex
-        while start < self.endIndex, let range = range(of: string, range: start..<self.endIndex), !range.isEmpty {
-            //            let IndexDistance: String.IndexDistance = distance(from: self.startIndex, to: range.lowerBound)
-            indices.append(range.lowerBound)
-            start = range.upperBound
-        }
-        return indices
-    }
-
     /// Returns an index that is the specified distance from the start or end of the
     /// string. If 'n' is positive then offset start from the beginning of the string
     /// else from the end of the string.
@@ -249,18 +233,12 @@ extension StringProtocol {
 
     /// Returns the index? starting where the subString was found.
     ///
-    ///    let str = "abcde"
-    ///    if let index = str.index(of: "cd") {
-    ///        let substring = str[..<index]   // ab
-    ///        let string = String(substring)
-    ///        print(string)  // "ab\n"
-    ///    }
-    ///
     ///    let str = "Hello, playground, playground, playground"
-    ///    str.index(of: "play")      // 7
-    ///    str.endIndex(of: "play")   // 11
-    ///    str.indices(of: "play")    // [7, 19, 31]
-    ///    str.ranges(of: "play")     // [{lowerBound 7, upperBound 11}, {lowerBound 19, upperBound 23}, {lowerBound 31, upperBound 35}]
+    ///    if let index = str.index(of: "play") {
+    ///        let substring = str[..<index]   // "Hello, "
+    ///        let string = String(substring)   // "Hello, "
+    ///        print(string)  // "ab\n"   // "Hello, \n"
+    ///    }
     ///
     /// - Parameters:
     ///   - string: subString to find.
@@ -273,33 +251,23 @@ extension StringProtocol {
 
     /// Returns the index? after where the subString was found.
     ///
-    ///    let str = "abcde"
-    ///    if let index = str.index(of: "cd") {
-    ///        let substring = str[..<index]   // ab
-    ///        let string = String(substring)
-    ///        print(string)  // "ab\n"
-    ///    }
-    ///
     ///    let str = "Hello, playground, playground, playground"
-    ///    str.endIndex(of: "play")   // 11
+    ///    if let index = str.index(after: "play") {
+    ///        let substring = str[..<index]   // "Hello, play"
+    ///        let string = String(substring)   // "Hello, play"
+    ///        print(string)  // "ab\n"   // "Hello, play\n"
+    ///    }
     ///
     /// - Parameters:
     ///   - string: subString to find.
     ///   - options: Default [], String.CompareOptions,
     ///     values that represent the options available to search and comparison.
     /// - Returns: index where string ends
-    func endIndex<T: StringProtocol>(of string: T, options: String.CompareOptions = []) -> Index? {
+    func index<T: StringProtocol>(after string: T, options: String.CompareOptions = []) -> Index? {
         range(of: string, options: options)?.upperBound
     }
 
     /// Return indeces of all the locations where the subString was found.
-    ///
-    ///    let str = "abcde"
-    ///    if let index = str.index(of: "cd") {
-    ///        let substring = str[..<index]   // ab
-    ///        let string = String(substring)
-    ///        print(string)  // "ab\n"
-    ///    }
     ///
     ///    let str = "Hello, playground, playground, playground"
     ///    str.indices(of: "play")    // [7, 19, 31]
@@ -368,10 +336,10 @@ public extension String {
 
     /// Returns the number of bytes used to hold the string. This works because
     /// Swift 5 now uses UTF-8 as it's backing store.
+    /// utf8 will treat \r\n as 2 characters so "\r\n".utf8.count returns 2
+    /// Unicode treats \r\n as 1 character so "\r\n".count returns 1
     @inline(__always)
     var size: Int {
-        // utf8 will treat \r\n as 2 character so "\r\n".utf8.count returns 2
-        // Unicode treats \r\n as 1 character so "\r\n".count returns 1
         get {utf8.count}
     }
 }
@@ -388,10 +356,11 @@ public extension String {
 
 public extension String {
 
-    /// returns true if string contains any non ascii characters else false
+    /// returns false if string contains any non ascii characters else true
     @inline(__always)
     var isAscii: Bool {
         get {
+            // .ascii requires all characters to be ascii else 0 is returned
             return self == "" || lengthOfBytes(using: .ascii) != 0
         }
     }
@@ -493,67 +462,6 @@ public extension String {
 }
 
 public extension String {
-
-    func lineOneSpaceAt(pin: Int) -> (Int, String) {
-
-        var start = pin
-        while start > 0 && self[start - 1] == " " {
-            start -= 1
-        }
-
-        var end = pin
-        while end < count && self[end] == " " {
-            end += 1
-        }
-
-        var newString = self
-        if start == end {//No space
-            newString.replaceSubrange(index(at: start)..<index(at: start), with: " ")
-        } else if end - start == 1 {//If one space
-            let range = index(at: start)..<index(at: end)
-            newString.replaceSubrange(range, with: " ")
-        } else { //More than one space
-            let range = index(at: start)..<index(at: end)
-            newString.replaceSubrange(range, with: " ")
-        }
-        return (start, newString)
-    }
-
-    func selectWord(pin: Int) -> Range<String.Index>? {
-        guard let range:Range<Int> = selectWord(pin: pin) else { return nil }
-        return indexRangeFor(range: range)
-    }
-
-    func selectWord(pin: Int) -> Range<Int>? {
-        var pin = pin
-
-        guard pin <= count else { return nil }
-        guard count > 1  else { return nil }
-
-        // Move pin to one position left when it is after last character
-        let invalidLastChars = CharacterSet(charactersIn: " :!?,.")
-        var validChars = CharacterSet.alphanumerics
-        validChars.insert(charactersIn: "@_")
-
-        if (pin > 0), let _ = (String(self[pin])).rangeOfCharacter(from: invalidLastChars) {
-            if let _ = (String(self[pin - 1])).rangeOfCharacter(from: validChars) {
-                pin -= 1
-            }
-        }
-
-        var start = pin
-        while start >= 0 && (String(self[start])).rangeOfCharacter(from: validChars) != nil {
-            start -= 1
-        }
-
-        var end = pin
-        while end < count && (String(self[end])).rangeOfCharacter(from: validChars) != nil {
-            end += 1
-        }
-        if start == end { return nil }
-        return start + 1..<end
-    }
-
     /// All multiple whitespaces are replaced by one whitespace
     var condensedWhitespace: String {
         let components = self.components(separatedBy: .whitespaces)
@@ -729,6 +637,33 @@ print(cafe.hasSuffix(decomposedCafe))  // Prints "true"
 print(cafe.suffix(1))
 print(decomposedCafe.suffix(1))
 
+let str3 = "abcde"
+if let index = str3.index(of: "cd") {
+    let substring = str3[..<index]   // ab
+    let string = String(substring)
+    print(string)  // "ab\n"
+}
+
+let str4 = "Hello, playground, playground, playground"
+if let index = str4.index(of: "play") {
+    let substring = str4[..<index]   // "Hello, "
+    let string = String(substring)   // "Hello, "
+    print(string)  // "ab\n"   // "Hello, \n"
+}
+if let index = str4.index(after: "play") {
+    let substring = str4[..<index]   // "Hello, play"
+    let string = String(substring)   // "Hello, play"
+    print(string)  // "Hello, play\n"
+}
+let indices = str4.indices(of: "play")    // [7, 19, 31]
+for index in indices {
+    print(str4[index...])
+    // "playground, playground, playground"
+    // "playground, playground"
+    // "playground"
+}
+
+
 if let i = cafe.index(of: "é") {
     print (cafe[i])
     print (i)
@@ -855,14 +790,26 @@ positiveInfix // positiveInfix == "7429"
 "\n\r\r\n".count
 "\n\r\r\n".size
 
-numbers = "12\n34\n"
-numbers.count
-numbers.size
-numbers.length  // length in utf16 code points which uses 2 bytes for each code point
-numbers.lengthOfBytes(using: .utf16)    // basically the same as (numbers.length * 2)
+numbers = "12\n34\n\r\n"
+numbers.count // 7
+numbers.size // 8
+numbers.length  // length in utf16 code points which uses 2 bytes for each code point // 8
+numbers.lengthOfBytes(using: .utf16)    // basically the same as (numbers.length * 2) // 16
 
 "🇺🇸".isAscii
 "🇺🇸abc".isAscii
 "abc".isAscii
 "".isAscii
 
+let a = "δέδ"
+print(a, Data(a.utf8).count) // δέδ 6
+
+let b = "δε\u{0301}δ"
+print(b, Data(b.utf8).count) // δέδ 8
+
+let bn = b.precomposedStringWithCanonicalMapping
+print(bn, Data(bn.utf8).count) // δέδ 6
+
+a == b
+a == bn
+b == bn
